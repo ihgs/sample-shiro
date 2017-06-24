@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'org.akhikhl.gretty'
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'org.akhikhl.gretty:gretty:+'
+  }
+}
+
+repositories {
+  jcenter()
+}
+
+task createDir {
+  doLast{
+    sourceSets.each { SourceSet sourceset ->
+      sourceset.getAllSource().getSrcDirs().each { File srcfile ->
+        srcfile.mkdirs()
+        println "Create Dirctory:"+srcfile 
+      }
+    }
+    file(webAppDir).mkdirs()
+    println "Create Directory:"+webAppDir
+  }
+}
