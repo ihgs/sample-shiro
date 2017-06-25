@@ -1,4 +1,4 @@
-package sample.shiro;
+package sample.user;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +36,10 @@ public class UserManager {
 		
 	}
 		
+	
+	public static User getUser(String apitoken){
+		return getUser(apitoken.toCharArray());
+	}
 	
 	public static User getUser(char[] apitoken) {
 		Map<String, User> store = new HashMap<>();

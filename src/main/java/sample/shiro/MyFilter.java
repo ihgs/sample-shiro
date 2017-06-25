@@ -12,8 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MyFilter implements Filter{
 
@@ -25,13 +28,21 @@ public class MyFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		System.out.println("IN:doFilter");
+		
 		HttpServletRequest req = (HttpServletRequest)request;
 		
 		String apitoken  = req.getParameter("token");
 
 		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser.isAuthenticated()){
+			System.out.println("Already "); //confirm deleting the session.
+			chain.doFilter(req, response);
+			return;
+		}
 		
-		UsernamePasswordToken token = new UsernamePasswordToken("", apitoken);
+		AuthenticationToken token = new MyAuthenticationToken(apitoken);
+		
 		try{
 			currentUser.login(token);
 		}catch(AuthenticationException e){

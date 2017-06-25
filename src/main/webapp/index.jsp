@@ -1,4 +1,4 @@
-<%@page import="sample.shiro.UserManager.User"%>
+<%@page import="sample.user.UserManager.User"%>
 <html>
 <body>
 <%@page import="org.apache.shiro.authc.UsernamePasswordToken"%>
