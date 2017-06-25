@@ -1,0 +1,81 @@
+== sample-shiro
+
+ Apache Shiro を使った認証・認可をするサンプルプロジェクト
+ 
+ 
+ 
+ ```
+ gradle appRun
+ ```
+ 
+ 
+=== 仕様
+
+`user一覧取得`と`user作成`を実装する。
+
+* user一覧取得は、`admin`,`user` role を保持しているユーザーが取得可能であり、`admin` role 保持者の場合、token情報を含んだデータを取得できる。
+* `user作成`は、`user:create` permission が必要である。
+
+
+
+=== 動作確認
+
+* tokenなしでアクセスすると401
+
+----
+$ curl -v http://localhost:8080/sample-shiro/users
+* Hostname was NOT found in DNS cache
+*   Trying 127.0.0.1...
+* Connected to localhost (127.0.0.1) port 8080 (#0)
+> GET /sample-shiro/users HTTP/1.1
+> User-Agent: curl/7.35.0
+> Host: localhost:8080
+> Accept: */*
+> 
+< HTTP/1.1 401 Unauthorized
+< Date: Sat, 01 Jul 2017 03:02:35 GMT
+< Set-Cookie: rememberMe=deleteMe; Path=/sample-shiro; Max-Age=0; Expires=Fri, 30-Jun-2017 03:02:35 GMT
+< Content-Type: application/json
+< Content-Length: 0
+* Server Jetty(9.2.22.v20170606) is not blacklisted
+< Server: Jetty(9.2.22.v20170606)
+< 
+* Connection #0 to host localhost left intact
+----
+
+
+* adminロールでアクセスするとtokenつきで取得
+
+----
+$ curl -H "token: admintoken" -H "Accept: application/json" -H "Content-type: application/json" http://localhost:8080/sample-shiro/users
+[{"username":"user1","token":"usertoken","roleSet":["user"]},{"username":"admin","token":"admintoken","roleSet":["admin","user"]}]
+----
+
+* `user:create` permissionを持っている`admin`ロールで、ユーザーの作成
+
+----
+$ curl -H "token: admintoken" -H "Accept: application/json" -H "Content-type: application/json" -X POST "http://localhost:8080/sample-shiro/users?username=test&role=admin&role=user"
+{"username":"test","token":"857b6a31-09bd-4316-9922-f87fcadf8541","roleSet":["admin","user"]}
+----
+
+
+
+* `user:create`permissionを持っていないuserロールで、ユーザーの作成
+
+----
+$ curl -H "token: usertoken" -H "Accept: application/json" -H "Content-type: application/json" -X POST "http://localhost:8080/sample-shiro/users?username=test&role=admin&role=user"
+{"username":"test","token":"857b6a31-09bd-4316-9922-f87fcadf8541","roleSet":["admin","user"]}
+ <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Error 403 Forbidden</title>
+</head>
+<body><h2>HTTP ERROR 403</h2>
+<p>Problem accessing /sample-shiro/users. Reason:
+<pre>    Forbidden</pre></p><hr><i><small>Powered by Jetty://</small></i><hr/>
+
+</body>
+</html>
+----
+
+HTMLで出力される（要改善）

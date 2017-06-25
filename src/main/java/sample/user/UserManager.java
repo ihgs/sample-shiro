@@ -1,5 +1,6 @@
 package sample.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,21 +11,17 @@ public class UserManager {
 		private Map<String, User> users = new HashMap<>();
 		private Store() {
 			{
-				User u1 = new User("user1");
+				User u1 = new User("admin","admintoken");
 				u1.addRole("admin");
 				u1.addRole("user");
-				users.put(u1.getUsername(), u1);
+				users.put(u1.getToken(), u1);
 			}	
 			{
-				User u1 = new User("user2");
+				User u1 = new User("user1","usertoken");
 				u1.addRole("user");
-				users.put(u1.getUsername(), u1);
+				users.put(u1.getToken(), u1);
 			}	
-			{
-				User u1 = new User("user3");
-				u1.addRole("user");
-				users.put(u1.getUsername(), u1);
-			}
+			
 		}
 		
 		private User get(String token){
@@ -36,7 +33,7 @@ public class UserManager {
 		}
 		
 		private Collection<User> list(){
-			return users.values();
+			return new ArrayList<>(users.values());
 		}
 		
 		private void delete(String username){

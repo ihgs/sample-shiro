@@ -28,7 +28,7 @@ public class MyRealm extends AuthorizingRealm{
 		User user = (User)token.getPrincipal();
 		
 		if(user == null){
-			throw new AuthenticationException(String.valueOf(token.getCredentials()));
+			throw new AuthenticationException("Invalid token: " + String.valueOf(token.getCredentials()));
 		}
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, utoken.getCredentials(), this.getClass().getName());
 		return info;

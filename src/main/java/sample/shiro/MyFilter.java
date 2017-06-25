@@ -9,14 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MyFilter implements Filter{
 
@@ -32,7 +30,7 @@ public class MyFilter implements Filter{
 		
 		HttpServletRequest req = (HttpServletRequest)request;
 		
-		String apitoken  = req.getParameter("token");
+		String apitoken  = req.getHeader("token");
 
 		Subject currentUser = SecurityUtils.getSubject();
 		if (currentUser.isAuthenticated()){
@@ -46,7 +44,10 @@ public class MyFilter implements Filter{
 		try{
 			currentUser.login(token);
 		}catch(AuthenticationException e){
-			throw e;
+			HttpServletResponse  res = (HttpServletResponse)response;
+			res.setContentType("application/json");
+			res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
 		}
 		try{
 			chain.doFilter(req, response);
