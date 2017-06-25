@@ -2,8 +2,8 @@ package sample.shiro;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
+import sample.user.User;
 import sample.user.UserManager;
-import sample.user.UserManager.User;
 
 public class MyAuthenticationToken implements AuthenticationToken{
 	

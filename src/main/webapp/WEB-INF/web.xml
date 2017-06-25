@@ -23,8 +23,6 @@
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
     
- 	
-
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
@@ -32,13 +30,26 @@
 
     <filter-mapping>
         <filter-name>ShiroFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
+    <filter>
+        <filter-name>RestServer</filter-name>
+        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>sample.jersey.resources</param-value>
+        </init-param>
+        
+    </filter>
+    <filter-mapping>
+        <filter-name>RestServer</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
     
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

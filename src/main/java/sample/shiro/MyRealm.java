@@ -8,9 +8,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 
-import sample.user.UserManager.User;
+import sample.user.User;
 
 public class MyRealm extends AuthorizingRealm{
 

@@ -1,68 +1,70 @@
 package sample.user;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class UserManager {
 	
-	public static class User{
-		private String username;
-		private Set<String> roleSet = new HashSet<>();
-		
-		private User(String username){
-			this.username = username;
-		}
-		
-		public String getUsername(){
-			return this.username;
-		}
-		
-		public void addRole(String...roles){
-			for (String role :roles){
-				this.roleSet.add(role);
+	private static class Store{
+		private Map<String, User> users = new HashMap<>();
+		private Store() {
+			{
+				User u1 = new User("user1");
+				u1.addRole("admin");
+				u1.addRole("user");
+				users.put(u1.getUsername(), u1);
+			}	
+			{
+				User u1 = new User("user2");
+				u1.addRole("user");
+				users.put(u1.getUsername(), u1);
+			}	
+			{
+				User u1 = new User("user3");
+				u1.addRole("user");
+				users.put(u1.getUsername(), u1);
 			}
 		}
 		
-		public Set<String> getRoles(){
-			return this.roleSet;
+		private User get(String token){
+			return users.get(token);
 		}
 		
-		@Override
-		public String toString() {
-			return this.username;
+		private void add(User user){
+			users.put(user.getUsername(), user);
 		}
 		
+		private Collection<User> list(){
+			return users.values();
+		}
+		
+		private void delete(String username){
+			users.remove(username);
+		}
 	}
+	
+	
+	
+	
+	
+	
+	private static Store store = new Store();
 		
 	
 	public static User getUser(String apitoken){
-		return getUser(apitoken.toCharArray());
-	}
-	
-	public static User getUser(char[] apitoken) {
-		Map<String, User> store = new HashMap<>();
-		{
-			User u1 = new User("user1");
-			u1.addRole("admin");
-			u1.addRole("user");
-			store.put(u1.username, u1);
-		}	
-		{
-			User u1 = new User("user2");
-			u1.addRole("user");
-			store.put(u1.username, u1);
-		}	
-		{
-			User u1 = new User("user3");
-			u1.addRole("user");
-			store.put(u1.username, u1);
-		}
-		
-		String str = String.valueOf(apitoken);
-		
-		return store.get(str);
+		return store.get(apitoken);
 	}
 
+	public static void addUser(User user){
+		store.add(user);
+	}
+	
+	public static Collection<User> list(){
+		return store.list();
+	}
+	
+	public static void delete(String username){
+		store.delete(username);
+	}
 }
