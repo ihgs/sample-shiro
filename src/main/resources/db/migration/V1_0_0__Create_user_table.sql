@@ -10,7 +10,8 @@ create table UserToken (
 	name varchar(64), 
 	roles varchar(1024),
 	created_at date not null,
-	revoked boolean default false
+	revoked boolean default false,
+	revoked_at date
 );
 
 create index idx_myuser on MyUser (ID);
