@@ -1,5 +1,6 @@
 package sample.jersey.resources;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
 
+import sample.dao.UserDao;
 import sample.user.User;
 import sample.user.UserManager;
 
@@ -31,21 +33,30 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String userList(){
-		Collection<User> users = UserManager.list();
-		
 		Gson g = new Gson();
-		Subject currentUser = SecurityUtils.getSubject();
-		if (!currentUser.hasRole("admin")){
-			Collection<User> notokenUser = new ArrayList<>();
-			for (User u : users){
-				User us = new User(u.getUsername(), null);
-				us.addRole(u.getRoles().toArray(new String[0]));
-				notokenUser.add(us);
-			}
-			return  g.toJson(notokenUser);
-		}else{
-			return  g.toJson(users);
-		}	
+
+		UserDao dao = new UserDao();
+		try {
+			List<sample.dao.bean.User> ulist = dao.list(null);
+			return  g.toJson(ulist);
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+//		Collection<User> users = UserManager.list();
+//		
+//		Subject currentUser = SecurityUtils.getSubject();
+//		if (!currentUser.hasRole("admin")){
+//			Collection<User> notokenUser = new ArrayList<>();
+//			for (User u : users){
+//				User us = new User(u.getUsername(), null);
+//				us.addRole(u.getRoles().toArray(new String[0]));
+//				notokenUser.add(us);
+//			}
+//			return  g.toJson(notokenUser);
+//		}else{
+//			return  g.toJson(users);
+//		}	
 	}
 	
 	@POST

@@ -9,18 +9,19 @@ import java.util.UUID;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
-import sample.dao.bean.User;
 import sample.dao.bean.UserToken;
 
 public class UserTokenDao extends BaseDao {
 
 	public String create(int userId, String name, String[] roles) throws SQLException {
+
 		try (Connection conn = this.connection()) {
 			String sql = "INSERT INTO UserToken (token, user_id, name, roles, created_at)" + " values (?, ?, ?, ?, ?)";
 			String uuid = uuid();
 			this.qr.update(conn, sql, uuid, userId, name, UserToken.rolesStr(roles), now());
 			return uuid;
 		}
+		
 	}
 
 	public List<UserToken> list(int userId, boolean containRevoked) throws SQLException {

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure class="org.eclipse.jetty.server.Server">
+
+	<New id="jnditest" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>jdbc/jnditest</Arg>
+		<Arg>
+			<New class="org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource">
+				<Set name="databaseName"><SystemProperty name="dbpath" /></Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>
